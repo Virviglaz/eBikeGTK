@@ -22,6 +22,7 @@ public:
 		m_grid.attach(m_clockLabel, 0, 0);
 		m_grid.attach(m_listBox, 0, 1);
 
+		m_listBox.set_selection_mode(Gtk::SelectionMode::NONE);
 		m_listBox.prepend(*(new WidgetBike()));
 		m_listBox.prepend(*(new WidgetBike()));
 #ifdef TARGET_ARCH_ARM64
