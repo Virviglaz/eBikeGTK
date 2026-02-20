@@ -3,28 +3,27 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/image.h>
 #include <gtkmm/listbox.h>
+#include <list>
 
 #include <iostream>
 #include "Widgets/WidgetClock.h"
 #include "Widgets/WidgetBike.h"
+#include "Server/eBikeUDPserver.h"
 
 class MainWindows : public Gtk::Window
 {
 public:
 	MainWindows()
 	{
-		set_title("eBikeGTK Desktop App");
-
 		m_grid.set_expand(true);
 		m_grid.set_column_homogeneous(true);
-		set_child(m_grid);
+		m_grid.attach(m_listBox, 0, 0);
 
-		m_grid.attach(m_clockLabel, 0, 0);
-		m_grid.attach(m_listBox, 0, 1);
+		set_child(m_grid);
+		set_titlebar(m_clockLabel);
 
 		m_listBox.set_selection_mode(Gtk::SelectionMode::NONE);
-		m_listBox.prepend(*(new WidgetBike()));
-		m_listBox.prepend(*(new WidgetBike()));
+
 #ifdef TARGET_ARCH_ARM64
 		set_decorated(false);
 		set_deletable(false);
@@ -33,14 +32,40 @@ public:
 		set_default_size(600, 800);
 		set_resizable(false);
 #endif
+		m_server.Start();
+
+		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 20)));
+		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 2", 50)));
+		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 3", 90)));
+		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 55)));
 	}
 
-	~MainWindows() override {}
+	~MainWindows() override {
+		m_server.Stop();
+	}
 
-protected:
+private:
+	void registerBikeWidget(WidgetBike&& bike)
+	{
+		auto existingBikeIt = std::find(m_bikes.begin(), m_bikes.end(), bike);
+		if (existingBikeIt != m_bikes.end())
+		{
+			m_listBox.remove(*(existingBikeIt->get_parent()));
+			m_bikes.remove(*existingBikeIt);
+		}
+
+		/* Move actual item to container */
+		m_bikes.push_back(std::forward<WidgetBike>(bike));
+
+		/* Use reference to it */
+		m_listBox.prepend(m_bikes.back());
+	}
+
 	Gtk::Grid m_grid;
 	Gtk::ListBox m_listBox;
 	WidgetClock m_clockLabel;
+	std::list<WidgetBike> m_bikes;
+	eBikeUDPserver m_server = eBikeUDPserver(sigc::mem_fun(*this, &MainWindows::registerBikeWidget));
 };
 
 int main(int argc, char *argv[])

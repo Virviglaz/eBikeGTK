@@ -1,14 +1,18 @@
+#ifndef WIDGETCLOCK_H
+#define WIDGETCLOCK_H
+
 #include <gtkmm/label.h>
 #include <glibmm/main.h>
+#include <chrono>
 #include <ctime>
 #include <locale>
+#include <gtkmm/cssprovider.h>
 
 class Clock
 {
 public:
-	static const std::string get_time()
+	static const std::string get_time(std::time_t time = std::time(nullptr))
 	{
-		std::time_t time = std::time({});
 		char timeString[std::size("yyyy-mm-ddThh:mm:ssZ")];
 		std::strftime(std::data(timeString), std::size(timeString),
 				  "%F %T", std::gmtime(&time));
@@ -23,6 +27,10 @@ public:
 	WidgetClock() : Gtk::Label()
 	{
 		Glib::signal_timeout().connect(sigc::mem_fun(*this, &WidgetClock::update_time), 1000);
+
+		auto css = Gtk::CssProvider::create();
+		css->load_from_data("label { font-size: 20px; }");
+		get_style_context()->add_provider(css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	}
 private:
 	bool update_time()
@@ -32,3 +40,5 @@ private:
 		return true;
 	}
 };
+
+#endif // WIDGETCLOCK_H
