@@ -15,6 +15,7 @@ public:
 	explicit
 	WidgetBike(eBikeInfo info) : m_info(info)
 	{
+		add_css_class("eBikeWidgetGrid");
 		m_imageBike.set_pixel_size(50);
 		m_imageBike.set("Resources/bike_icon.png");
 

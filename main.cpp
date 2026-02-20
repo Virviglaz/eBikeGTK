@@ -3,6 +3,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/image.h>
 #include <gtkmm/listbox.h>
+#include <gtkmm/cssprovider.h>
 #include <list>
 
 #include <iostream>
@@ -22,7 +23,13 @@ public:
 		set_child(m_grid);
 		set_titlebar(m_clockLabel);
 
+		m_listBox.add_css_class("eBikeMainWindowListBox");
 		m_listBox.set_selection_mode(Gtk::SelectionMode::NONE);
+
+		auto m_refCssProvider = Gtk::CssProvider::create();
+		Gtk::StyleProvider::add_provider_for_display(get_display(), m_refCssProvider,
+			GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		m_refCssProvider->load_from_path("Theme/style.css");
 
 #ifdef TARGET_ARCH_ARM64
 		set_decorated(false);
@@ -30,14 +37,16 @@ public:
 		fullscreen();
 #else
 		set_default_size(600, 800);
+		add_css_class("eBikeMainWindow");
 		set_resizable(false);
 #endif
 		m_server.Start();
-
+#if 1
 		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 20)));
 		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 2", 50)));
 		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 3", 90)));
 		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 55)));
+#endif
 	}
 
 	~MainWindows() override {

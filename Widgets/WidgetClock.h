@@ -27,10 +27,7 @@ public:
 	WidgetClock() : Gtk::Label()
 	{
 		Glib::signal_timeout().connect(sigc::mem_fun(*this, &WidgetClock::update_time), 1000);
-
-		auto css = Gtk::CssProvider::create();
-		css->load_from_data("label { font-size: 20px; }");
-		get_style_context()->add_provider(css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		add_css_class("eBikeDateTimeLabel");
 	}
 private:
 	bool update_time()
