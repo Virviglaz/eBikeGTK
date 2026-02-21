@@ -9,7 +9,8 @@ extern "C"
 #endif
 	struct SharedModelData
 	{
-		char name[32];
+		char name[16];
+		char state[16];
 		uint32_t mileage_km;
 		uint32_t battery_percent;
 		uint32_t battery_cycles;

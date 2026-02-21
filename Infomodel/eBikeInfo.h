@@ -28,8 +28,16 @@ public:
 	virtual std::string toString() const
 	{
 		char buffer[256];
-		snprintf(buffer, sizeof(buffer), "%s\nMileage: %u km\nBattery: %u%%\nCycles: %u\n%s",
-				 m_name.c_str(), info.mileage_km, info.battery_percent, info.battery_cycles,
+		snprintf(buffer, sizeof(buffer),
+				 "%s %s\n" \
+				 "Mileage: %u km\n" \
+				 "Battery: %u%%\n" \
+				 "Cycles: %u\n%s",
+				 m_name.c_str(),
+				 info.state,
+				 info.mileage_km,
+				 info.battery_percent,
+				 info.battery_cycles,
 				 Clock::get_time(m_created).c_str());
 		return std::string(buffer);
 	}
@@ -51,6 +59,7 @@ public:
 	{
 		m_name = name;
 		strcpy(info.name, name.c_str());
+		strcpy(info.state, "Debug");
 		info.mileage_km = 1234;
 		info.battery_percent = batteryPercent;
 		info.battery_cycles = 78;

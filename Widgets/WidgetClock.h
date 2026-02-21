@@ -11,6 +11,12 @@
 class Clock
 {
 public:
+	/**
+	 * @brief Get the current time as a formatted string.
+	 *
+	 * @param time The time to format. If not provided, the current time will be used.
+	 * @return A string representing the formatted time.
+	 */
 	static const std::string get_time(std::time_t time = std::time(nullptr))
 	{
 		char timeString[std::size("yyyy-mm-ddThh:mm:ssZ")];
