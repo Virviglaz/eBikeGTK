@@ -3,12 +3,15 @@
 
 #include <stdint.h>
 
+#define MAGIC_NUMBER 0xEB1F3DA2
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 	struct SharedModelData
 	{
+		uint32_t magic_number;
 		char name[16];
 		char state[16];
 		uint32_t mileage_km;

@@ -30,6 +30,11 @@ public:
 
 		struct SharedModelData *info = reinterpret_cast<struct SharedModelData *>(msg.GetData());
 
+		if (info->magic_number != MAGIC_NUMBER) {
+			std::cerr << "Received message with invalid magic number: " << std::hex << info->magic_number << std::dec << std::endl;
+			return;
+		}
+
 		eBikeInfo bikeInfo(info);
 
 		m_registerBikeFunc(WidgetBike(bikeInfo));
