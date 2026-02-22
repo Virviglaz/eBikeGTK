@@ -12,8 +12,8 @@ extern "C"
 	struct SharedModelData
 	{
 		uint32_t magic_number;
-		char name[16];
-		char state[16];
+		char name[32];
+		char state[32];
 		uint32_t mileage_km;
 		uint32_t battery_percent;
 		uint32_t battery_cycles;
