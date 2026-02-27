@@ -11,24 +11,35 @@
 #include "Widgets/WidgetBike.h"
 #include "Server/eBikeUDPserver.h"
 
-class MainWindows : public Gtk::Window
+class MainWindows : public MainWindowsInt
 {
 public:
 	MainWindows()
 	{
-		m_grid.set_expand(true);
 		m_grid.set_column_homogeneous(true);
 		m_grid.attach(m_listBox, 0, 0);
 
+		auto m_refCssProvider = Gtk::CssProvider::create();
+#ifdef GTKMM4
+		m_grid.set_expand(true);
 		set_child(m_grid);
-		set_titlebar(m_clockLabel);
-
+		add_css_class("eBikeMainWindow");
 		m_listBox.add_css_class("eBikeMainWindowListBox");
 		m_listBox.set_selection_mode(Gtk::SelectionMode::NONE);
 
-		auto m_refCssProvider = Gtk::CssProvider::create();
-		Gtk::StyleProvider::add_provider_for_display(get_display(), m_refCssProvider,
-			GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		Gtk::StyleProvider::add_provider_for_display(get_display(),
+			m_refCssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+#else
+		set_position(Gtk::WIN_POS_CENTER);
+		add(m_grid);
+		get_style_context()->add_class("eBikeMainWindow");
+		m_listBox.get_style_context()->add_class("eBikeMainWindowListBox");
+
+		Gtk::StyleContext::add_provider_for_screen(Gdk::Screen::get_default(),
+			m_refCssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+#endif
+		set_titlebar(m_clockLabel);
+
 		m_refCssProvider->load_from_path("Theme/style.css");
 
 #ifdef TARGET_ARCH_ARM64
@@ -37,15 +48,14 @@ public:
 		fullscreen();
 #else
 		set_default_size(600, 800);
-		add_css_class("eBikeMainWindow");
 		set_resizable(false);
 #endif
 		m_server.Start();
 #if 1
-		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 20)));
-		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 2", 50)));
-		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 3", 90)));
-		registerBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 55)));
+		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 20)));
+		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 2", 50)));
+		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 3", 90)));
+		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 55)));
 #endif
 	}
 
@@ -53,8 +63,7 @@ public:
 		m_server.Stop();
 	}
 
-private:
-	void registerBikeWidget(WidgetBike&& bike)
+	void RegisterBikeWidget(WidgetBike&& bike) override
 	{
 		auto existingBikeIt = std::find(m_bikes.begin(), m_bikes.end(), bike);
 		if (existingBikeIt != m_bikes.end())
@@ -69,17 +78,23 @@ private:
 		/* Use reference to it */
 		m_listBox.prepend(m_bikes.back());
 	}
-
+private:
 	Gtk::Grid m_grid;
 	Gtk::ListBox m_listBox;
 	WidgetClock m_clockLabel;
 	std::list<WidgetBike> m_bikes;
-	eBikeUDPserver m_server = eBikeUDPserver(sigc::mem_fun(*this, &MainWindows::registerBikeWidget));
+	eBikeUDPserver m_server = eBikeUDPserver(this);
 };
 
 int main(int argc, char *argv[])
 {
+#ifdef GTKMM4
 	auto app = Gtk::Application::create("");
-
 	return app->make_window_and_run<MainWindows>(argc, argv);
+#else
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "");
+	MainWindows window;
+	window.show_all();
+	return app->run(window);  
+#endif
 }

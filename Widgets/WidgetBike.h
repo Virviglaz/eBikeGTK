@@ -15,7 +15,13 @@ public:
 	explicit
 	WidgetBike(eBikeInfo info) : m_info(info)
 	{
+#ifdef GTKMM4
 		add_css_class("eBikeWidgetGrid");
+		set_expand(false);
+#else
+		get_style_context()->add_class("eBikeWidgetGrid");
+		set_hexpand(false);
+#endif
 		m_imageBike.set_pixel_size(50);
 		m_imageBike.set("Resources/bike_icon.png");
 
@@ -27,7 +33,6 @@ public:
 		attach(m_imageBike,		0, 0);
 		attach(m_imageBattery,	1, 0);
 		attach(m_label,			2, 0);
-		set_expand(false);
 		set_column_homogeneous(true);
 	}
 

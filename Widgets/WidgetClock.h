@@ -33,7 +33,11 @@ public:
 	WidgetClock() : Gtk::Label()
 	{
 		Glib::signal_timeout().connect(sigc::mem_fun(*this, &WidgetClock::update_time), 1000);
+#ifdef GTKMM4
 		add_css_class("eBikeDateTimeLabel");
+#else
+		get_style_context()->add_class("eBikeDateTimeLabel");
+#endif
 	}
 private:
 	bool update_time()

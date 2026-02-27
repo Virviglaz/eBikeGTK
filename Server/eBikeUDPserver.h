@@ -3,23 +3,26 @@
 
 #define SERVER_PORT		1785
 
-#include <sigc++/sigc++.h>
-#include <iostream>
 
 #include "server.h"
 #include "../Widgets/WidgetBike.h"
 #include "../Infomodel/SharedInfo.h"
+#include <gtkmm/window.h>
 
-using infoModelCallback = sigc::slot<void(WidgetBike &&)>;
+class MainWindowsInt : public Gtk::Window
+{
+public:
+	virtual void RegisterBikeWidget(WidgetBike&& bike) = 0;
+};
 
 class eBikeUDPserver : public Network::ServerBase
 {
 public:
 	eBikeUDPserver() = delete;
 
-	eBikeUDPserver(infoModelCallback cb) :
+	eBikeUDPserver(MainWindowsInt *parent) :
 		Network::ServerBase(SERVER_PORT, 128, 32, Network::ServerBase::Protocol::UDP),
-		m_registerBikeFunc(cb) {};
+		parent_(parent) {};
 
 	void OnReceive(Network::MessageBase &msg) override
 	{
@@ -37,10 +40,10 @@ public:
 
 		eBikeInfo bikeInfo(info);
 
-		m_registerBikeFunc(WidgetBike(bikeInfo));
+		parent_->RegisterBikeWidget(WidgetBike(bikeInfo));
 	}
 private:
-	infoModelCallback m_registerBikeFunc;
+	MainWindowsInt *parent_;
 };
 
 #endif // EBIKEUDP_SERVER_H
