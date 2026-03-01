@@ -2,12 +2,14 @@
 #define SETTINGS_H
 
 #include <string>
+#include <iostream>
 
 static std::string path;
 
-void setPath(const std::string& newPath)
+void setPath(const char *newPath)
 {
         path = newPath;
+	std::cout << "Using custom path: " << path << std::endl;
 }
 
 std::string& getPath()

@@ -26,7 +26,7 @@ public:
 		m_imageBike.set(getPath() + "Resources/bike_icon.png");
 
 		m_imageBattery.set_pixel_size(80);
-		m_imageBattery.set(batteryIconPath());
+		m_imageBattery.set(getPath() + batteryIconPath());
 
 		m_label.set_text(m_info.toString());
 
@@ -58,7 +58,7 @@ private:
 			imageIndex = 25;
 
 		char buffer[64];
-		snprintf(buffer, sizeof(buffer), "%sResources/battery_%u.png", getPath().c_str(), imageIndex);
+		snprintf(buffer, sizeof(buffer), "Resources/battery_%u.png", imageIndex);
 		return std::string(buffer);
 	}
 

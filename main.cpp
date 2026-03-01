@@ -6,7 +6,6 @@
 #include <gtkmm/cssprovider.h>
 #include <list>
 
-#include <iostream>
 #include "Widgets/WidgetClock.h"
 #include "Widgets/WidgetBike.h"
 #include "Server/eBikeUDPserver.h"
@@ -93,9 +92,9 @@ int main(int argc, char *argv[])
 		setPath(argv[1]);
 #ifdef GTKMM4
 	auto app = Gtk::Application::create("");
-	return app->make_window_and_run<MainWindows>(argc, argv);
+	return app->make_window_and_run<MainWindows>(++argc, ++argv);
 #else
-	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "");
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(++argc, ++argv, "");
 	MainWindows window;
 	window.show_all();
 	return app->run(window);  
