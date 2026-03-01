@@ -4,7 +4,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
-
+#include "../Infomodel/Settings.h"
 #include "../Infomodel/eBikeInfo.h"
 
 class WidgetBike : public Gtk::Grid
@@ -23,7 +23,7 @@ public:
 		set_hexpand(false);
 #endif
 		m_imageBike.set_pixel_size(50);
-		m_imageBike.set("Resources/bike_icon.png");
+		m_imageBike.set(getPath() + "Resources/bike_icon.png");
 
 		m_imageBattery.set_pixel_size(80);
 		m_imageBattery.set(batteryIconPath());
@@ -58,7 +58,7 @@ private:
 			imageIndex = 25;
 
 		char buffer[64];
-		snprintf(buffer, sizeof(buffer), "Resources/battery_%u.png", imageIndex);
+		snprintf(buffer, sizeof(buffer), "%sResources/battery_%u.png", getPath().c_str(), imageIndex);
 		return std::string(buffer);
 	}
 

@@ -10,6 +10,7 @@
 #include "Widgets/WidgetClock.h"
 #include "Widgets/WidgetBike.h"
 #include "Server/eBikeUDPserver.h"
+#include "Infomodel/Settings.h"
 
 class MainWindows : public MainWindowsInt
 {
@@ -40,7 +41,7 @@ public:
 #endif
 		set_titlebar(m_clockLabel);
 
-		m_refCssProvider->load_from_path("Theme/style.css");
+		m_refCssProvider->load_from_path(getPath() + "Theme/style.css");
 
 #ifdef TARGET_ARCH_ARM64
 		set_decorated(false);
@@ -88,6 +89,8 @@ private:
 
 int main(int argc, char *argv[])
 {
+	if (argc > 1)
+		setPath(argv[1]);
 #ifdef GTKMM4
 	auto app = Gtk::Application::create("");
 	return app->make_window_and_run<MainWindows>(argc, argv);
