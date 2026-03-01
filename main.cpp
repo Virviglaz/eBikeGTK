@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 	auto app = Gtk::Application::create("");
 	return app->make_window_and_run<MainWindows>(++argc, ++argv);
 #else
-	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(++argc, ++argv, "");
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("");
 	MainWindows window;
 	window.show_all();
 	return app->run(window);  
