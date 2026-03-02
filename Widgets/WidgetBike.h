@@ -4,6 +4,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
+#include <gdkmm/pixbuf.h>
 #include "../Infomodel/Settings.h"
 #include "../Infomodel/eBikeInfo.h"
 
@@ -17,16 +18,28 @@ public:
 	{
 #ifdef GTKMM4
 		add_css_class("eBikeWidgetGrid");
+		m_label.add_css_class("eBikeWidgetBikeLabel");
 		set_expand(false);
 #else
 		get_style_context()->add_class("eBikeWidgetGrid");
+		m_label.get_style_context()->add_class("eBikeWidgetBikeLabel");
 		set_hexpand(false);
 #endif
-		m_imageBike.set_pixel_size(50);
-		m_imageBike.set(getPath() + "Resources/bike_icon.png");
 
-		m_imageBattery.set_pixel_size(80);
-		m_imageBattery.set(getPath() + batteryIconPath());
+		{
+			m_imageBike.get_style_context()->add_class("eBikeWidgetImage");
+			m_imageBike.set(getPath() + "Resources/bike_icon.png");
+			//auto pixbuf = Gdk::Pixbuf::create_from_file(getPath() + "Resources/bike_icon.png");
+			//auto scaled_pixbuf = pixbuf->scale_simple(100, 100, Gdk::INTERP_BILINEAR);
+			//m_imageBike.set(scaled_pixbuf);
+		}
+
+		{
+			m_imageBattery.set(getPath() + batteryIconPath());
+			//auto pixbuf = Gdk::Pixbuf::create_from_file(getPath() + batteryIconPath());
+			//auto scaled_pixbuf = pixbuf->scale_simple(120, 80, Gdk::INTERP_BILINEAR);
+			//m_imageBattery.set(scaled_pixbuf);
+		}
 
 		m_label.set_text(m_info.toString());
 

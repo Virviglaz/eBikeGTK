@@ -8,8 +8,9 @@
 #include "../Widgets/WidgetBike.h"
 #include "../Infomodel/SharedInfo.h"
 #include <gtkmm/window.h>
+#include <gtkmm/applicationwindow.h>
 
-class MainWindowsInt : public Gtk::Window
+class MainWindowsInt : public Gtk::ApplicationWindow
 {
 public:
 	virtual void RegisterBikeWidget(WidgetBike&& bike) = 0;

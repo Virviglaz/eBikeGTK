@@ -1,19 +1,26 @@
 .eBikeDateTimeLabel {
-	background-color: rgb(29, 29, 23);
-	color: burlywood;
+	background-color: black;
+	color: green;
 }
 
 .eBikeWidgetGrid {
-	background-color: rgb(29, 29, 23);
-	color: burlywood;
+	background-color: black;
+	color: black;
 }
 
 .eBikeMainWindow {
-	background-color: rgb(29, 29, 23);
+	background-color: black;
 	color: burlywood;
+	font-size: 36px;
 }
 
 .eBikeMainWindowListBox {
-	background-color: rgb(29, 29, 23);
+	background-color: black;
 	color: burlywood;
+}
+
+.eBikeWidgetBikeLabel {
+	background-color: black;
+	color: burlywood;
+	font-size: 12px;
 }

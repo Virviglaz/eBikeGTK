@@ -17,7 +17,8 @@ public:
 	MainWindows()
 	{
 		m_grid.set_column_homogeneous(true);
-		m_grid.attach(m_listBox, 0, 0);
+		m_grid.attach(m_clockLabel, 0, 0);
+		m_grid.attach(m_listBox, 0, 1);
 
 		auto m_refCssProvider = Gtk::CssProvider::create();
 #ifdef GTKMM4
@@ -30,26 +31,27 @@ public:
 		Gtk::StyleProvider::add_provider_for_display(get_display(),
 			m_refCssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 #else
-		set_position(Gtk::WIN_POS_CENTER);
+		//set_position(Gtk::WIN_POS_CENTER);
+		m_grid.set_hexpand(false);
+		m_grid.set_vexpand(false);
 		add(m_grid);
 		get_style_context()->add_class("eBikeMainWindow");
+		m_grid.get_style_context()->add_class("eBikeWidgetGrid");
 		m_listBox.get_style_context()->add_class("eBikeMainWindowListBox");
+		m_listBox.set_selection_mode(Gtk::SelectionMode::SELECTION_NONE);
 
 		Gtk::StyleContext::add_provider_for_screen(Gdk::Screen::get_default(),
 			m_refCssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 #endif
-		set_titlebar(m_clockLabel);
-
 		m_refCssProvider->load_from_path(getPath() + "Theme/style.css");
 
-#ifdef TARGET_ARCH_ARM64
+		set_resizable(false);
 		set_decorated(false);
 		set_deletable(false);
+		set_default_size(480, 800);
+		set_size_request(480, 800);
 		fullscreen();
-#else
-		set_default_size(600, 800);
-		set_resizable(false);
-#endif
+
 		m_server.Start();
 #if 1
 		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 20)));
