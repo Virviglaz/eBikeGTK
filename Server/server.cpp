@@ -141,6 +141,8 @@ public:
 	ssize_t ReceiveUDP(char *buffer, size_t size, struct sockaddr_in *cli_addr)
 	{
 		socklen_t si_client_len = sizeof(*cli_addr);
+		if (!_socket)
+			return -1;
 		return recvfrom(_socket->_sockfd, buffer, size, 0,
 				(struct sockaddr *)cli_addr, &si_client_len);
 	}
@@ -227,7 +229,7 @@ static void tcp_handler(ServerBase *server)
 static void udp_handler(ServerBase *server)
 {
 	ServerInternal *srv = static_cast<ServerInternal *>(server);
-	char *buffer = new char[srv->GetMaxMsgSize()];
+	char *buffer = static_cast<char *>(malloc(srv->GetMaxMsgSize()));
 	if (!buffer)
 	{
 		/* Memory error, terminate */
@@ -252,6 +254,8 @@ static void udp_handler(ServerBase *server)
 
 		server->OnDisconnect();
 	}
+
+	free(buffer);
 }
 
 void ServerBase::Start()

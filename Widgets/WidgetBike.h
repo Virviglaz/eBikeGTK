@@ -28,15 +28,17 @@ public:
 
 		{
 			m_imageBike.get_style_context()->add_class("eBikeWidgetImage");
-			m_imageBike.set(getPath() + "Resources/bike_icon.png");
-			//auto pixbuf = Gdk::Pixbuf::create_from_file(getPath() + "Resources/bike_icon.png");
+			std::string iconPath = getPath() + "Resources/bike_icon.png";
+			m_imageBike.set(iconPath);
+			//auto pixbuf = Gdk::Pixbuf::create_from_file(iconPath);
 			//auto scaled_pixbuf = pixbuf->scale_simple(100, 100, Gdk::INTERP_BILINEAR);
 			//m_imageBike.set(scaled_pixbuf);
 		}
 
 		{
-			m_imageBattery.set(getPath() + batteryIconPath());
-			//auto pixbuf = Gdk::Pixbuf::create_from_file(getPath() + batteryIconPath());
+			std::string batteryPath = getPath() + batteryIconPath();
+			m_imageBattery.set(batteryPath);
+			//auto pixbuf = Gdk::Pixbuf::create_from_file(batteryPath);
 			//auto scaled_pixbuf = pixbuf->scale_simple(120, 80, Gdk::INTERP_BILINEAR);
 			//m_imageBattery.set(scaled_pixbuf);
 		}

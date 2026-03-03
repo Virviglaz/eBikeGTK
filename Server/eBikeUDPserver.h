@@ -9,6 +9,7 @@
 #include "../Infomodel/SharedInfo.h"
 #include <gtkmm/window.h>
 #include <gtkmm/applicationwindow.h>
+#include <iostream>
 
 class MainWindowsInt : public Gtk::ApplicationWindow
 {
@@ -22,7 +23,7 @@ public:
 	eBikeUDPserver() = delete;
 
 	eBikeUDPserver(MainWindowsInt *parent) :
-		Network::ServerBase(SERVER_PORT, 128, 32, Network::ServerBase::Protocol::UDP),
+		Network::ServerBase(SERVER_PORT, sizeof(struct SharedModelData), 32, Network::ServerBase::Protocol::UDP),
 		parent_(parent) {};
 
 	void OnReceive(Network::MessageBase &msg) override

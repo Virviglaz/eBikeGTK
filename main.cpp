@@ -32,8 +32,8 @@ public:
 			m_refCssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 #else
 		//set_position(Gtk::WIN_POS_CENTER);
-		m_grid.set_hexpand(false);
-		m_grid.set_vexpand(false);
+		//m_grid.set_hexpand(false);
+		//m_grid.set_vexpand(false);
 		add(m_grid);
 		get_style_context()->add_class("eBikeMainWindow");
 		m_grid.get_style_context()->add_class("eBikeWidgetGrid");
@@ -43,12 +43,13 @@ public:
 		Gtk::StyleContext::add_provider_for_screen(Gdk::Screen::get_default(),
 			m_refCssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 #endif
-		m_refCssProvider->load_from_path(getPath() + "Theme/style.css");
+		std::string cssPath = getPath() + "Theme/style.css";
+		m_refCssProvider->load_from_path(cssPath);
 
 		set_resizable(false);
 		set_decorated(false);
 		set_deletable(false);
-		set_default_size(480, 800);
+		//set_default_size(480, 800);
 		set_size_request(480, 800);
 		fullscreen();
 
@@ -93,10 +94,10 @@ int main(int argc, char *argv[])
 	if (argc > 1)
 		setPath(argv[1]);
 #ifdef GTKMM4
-	auto app = Gtk::Application::create("");
-	return app->make_window_and_run<MainWindows>(++argc, ++argv);
+	auto app = Gtk::Application::create("gtkmm.eBikeGTK.application");
+	return app->make_window_and_run<MainWindows>();
 #else
-	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("");
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("gtkmm.eBikeGTK.application");
 	MainWindows window;
 	window.show_all();
 	return app->run(window);  
