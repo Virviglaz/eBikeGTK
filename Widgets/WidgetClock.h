@@ -8,28 +8,25 @@
 #include <locale>
 #include <gtkmm/cssprovider.h>
 
-class Clock
-{
-public:
+class Clock {
+    public:
 	/**
 	 * @brief Get the current time as a formatted string.
 	 *
 	 * @param time The time to format. If not provided, the current time will be used.
 	 * @return A string representing the formatted time.
 	 */
-	static const std::string get_time(std::time_t time = std::time(nullptr))
+	static std::string get_time(std::time_t time = std::time(nullptr))
 	{
-		char timeString[std::size("yyyy-mm-ddThh:mm:ssZ")];
-		std::strftime(std::data(timeString), std::size(timeString),
-				  "%F %T", std::gmtime(&time));
+		char timeString[20];
+		std::strftime(timeString, sizeof(timeString), "%F %T", std::localtime(&time));
 
-		return timeString;
+		return std::string(timeString);
 	}
 };
 
-class WidgetClock : public Gtk::Label
-{
-public:
+class WidgetClock : public Gtk::Label {
+    public:
 	WidgetClock() : Gtk::Label()
 	{
 		Glib::signal_timeout().connect(sigc::mem_fun(*this, &WidgetClock::update_time), 1000);
@@ -39,7 +36,8 @@ public:
 		get_style_context()->add_class("eBikeDateTimeLabel");
 #endif
 	}
-private:
+
+    private:
 	bool update_time()
 	{
 		set_text(Clock::get_time());
