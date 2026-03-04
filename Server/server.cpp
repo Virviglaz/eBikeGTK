@@ -140,8 +140,6 @@ public:
 
 	ssize_t ReceiveUDP(char *buffer, size_t size, struct sockaddr_in *cli_addr)
 	{
-		if (!_socket || _socket->_sockfd < 0)
-			return -1;
 		socklen_t si_client_len = sizeof(*cli_addr);
 		return recvfrom(_socket->_sockfd, buffer, size, 0,
 				(struct sockaddr *)cli_addr, &si_client_len);
@@ -261,6 +259,7 @@ static void udp_handler(ServerBase *server)
 void ServerBase::Start()
 {
 	_socket = std::make_shared<ServerSocket>(*this);
+	_socket->Start();
 }
 
 void ServerBase::Stop()
@@ -269,7 +268,9 @@ void ServerBase::Stop()
 }
 
 ServerBase::ServerSocket::ServerSocket(ServerBase &server)
-	: server(server)
+	: server(server) {}
+
+void ServerBase::ServerSocket::Start()
 {
 	_sockfd = socket(AF_INET, server._protocol == ServerBase::Protocol::TCP ? SOCK_STREAM : SOCK_DGRAM, 0);
 	if (_sockfd < 0)
