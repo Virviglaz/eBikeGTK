@@ -1,3 +1,4 @@
+#include <gtkmm.h>
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
 #include <gtkmm/grid.h>
@@ -5,6 +6,8 @@
 #include <gtkmm/listbox.h>
 #include <gtkmm/cssprovider.h>
 #include <list>
+#include <queue>
+#include <mutex>
 
 #include "Widgets/WidgetClock.h"
 #include "Widgets/WidgetBike.h"
@@ -53,16 +56,18 @@ public:
 		set_size_request(480, 800);
 		fullscreen();
 
+		m_dispatcher.connect(sigc::mem_fun(*this, &MainWindows::on_notification_received));
+
 		try {
 			m_server.Start();
 		} catch (const std::exception &e) {
 			std::cerr << "Failed to start server: " << e.what() << std::endl;
 		}
-#if 1
-		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 20)));
-		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 2", 50)));
-		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 3", 90)));
-		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 55)));
+#ifdef DEBUG
+		RegisterBikeWidgetInternal(WidgetBike(eBikeInfoDebug("Test bike 1", 20)));
+		RegisterBikeWidgetInternal(WidgetBike(eBikeInfoDebug("Test bike 2", 50)));
+		RegisterBikeWidgetInternal(WidgetBike(eBikeInfoDebug("Test bike 3", 90)));
+		RegisterBikeWidgetInternal(WidgetBike(eBikeInfoDebug("Test bike 1", 55)));
 #endif
 	}
 
@@ -71,6 +76,13 @@ public:
 	}
 
 	void RegisterBikeWidget(WidgetBike&& bike) override
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		m_data_queue.push(std::move(bike));
+		m_dispatcher.emit();
+	}
+private:
+	void RegisterBikeWidgetInternal(WidgetBike&& bike)
 	{
 		auto existingBikeIt = std::find(m_bikes.begin(), m_bikes.end(), bike);
 		if (existingBikeIt != m_bikes.end())
@@ -85,12 +97,25 @@ public:
 		/* Use reference to it */
 		m_listBox.prepend(m_bikes.back());
 	}
-private:
+
+	void on_notification_received()
+	{
+		// 4. Lock, Pop, and Update UI (Main Thread)
+		std::lock_guard<std::mutex> lock(m_mutex);
+		while (!m_data_queue.empty()) {
+			RegisterBikeWidgetInternal(std::move(m_data_queue.front()));
+			m_data_queue.pop();
+		}
+	}
+
 	Gtk::Grid m_grid;
 	Gtk::ListBox m_listBox;
 	WidgetClock m_clockLabel;
 	std::list<WidgetBike> m_bikes;
 	eBikeUDPserver m_server = eBikeUDPserver(this);
+	Glib::Dispatcher m_dispatcher;
+	std::queue<WidgetBike> m_data_queue;
+	std::mutex m_mutex;
 };
 
 int main(int argc, char *argv[])
@@ -99,7 +124,7 @@ int main(int argc, char *argv[])
 		setPath(argv[1]);
 #ifdef GTKMM4
 	auto app = Gtk::Application::create("gtkmm.eBikeGTK.application");
-	return app->make_window_and_run<MainWindows>();
+	return app->make_window_and_run<MainWindows>(0, nullptr);
 #else
 	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("gtkmm.eBikeGTK.application");
 	MainWindows window;
