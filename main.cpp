@@ -96,6 +96,9 @@ private:
 
 		/* Use reference to it */
 		m_listBox.prepend(m_bikes.back());
+#ifndef GTKMM4
+		m_listBox.show_all();
+#endif
 	}
 
 	void on_notification_received()

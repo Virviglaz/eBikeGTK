@@ -30,7 +30,6 @@ public:
 		m_imageBike.set(getPath() + "Resources/bike_icon.png");
 		m_imageBattery.set(getPath() + batteryIconPath());
 
-		std::cout << "Created WidgetBike for " << m_info.toString() << std::endl;
 		m_label.set_text(m_info.toString());
 
 		attach(m_imageBike,		0, 0);
