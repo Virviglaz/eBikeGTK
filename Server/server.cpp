@@ -140,9 +140,9 @@ public:
 
 	ssize_t ReceiveUDP(char *buffer, size_t size, struct sockaddr_in *cli_addr)
 	{
-		socklen_t si_client_len = sizeof(*cli_addr);
-		if (!_socket)
+		if (!_socket || _socket->_sockfd < 0)
 			return -1;
+		socklen_t si_client_len = sizeof(*cli_addr);
 		return recvfrom(_socket->_sockfd, buffer, size, 0,
 				(struct sockaddr *)cli_addr, &si_client_len);
 	}

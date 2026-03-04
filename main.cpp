@@ -53,7 +53,11 @@ public:
 		set_size_request(480, 800);
 		fullscreen();
 
-		m_server.Start();
+		try {
+			m_server.Start();
+		} catch (const std::exception &e) {
+			std::cerr << "Failed to start server: " << e.what() << std::endl;
+		}
 #if 1
 		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 1", 20)));
 		RegisterBikeWidget(WidgetBike(eBikeInfoDebug("Test bike 2", 50)));
