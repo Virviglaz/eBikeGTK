@@ -14,6 +14,8 @@
 #include "Server/eBikeUDPserver.h"
 #include "Infomodel/Settings.h"
 
+#define MAX_BIKES 5
+
 class MainWindows : public MainWindowsInt
 {
 public:
@@ -34,9 +36,6 @@ public:
 		Gtk::StyleProvider::add_provider_for_display(get_display(),
 			m_refCssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 #else
-		//set_position(Gtk::WIN_POS_CENTER);
-		//m_grid.set_hexpand(false);
-		//m_grid.set_vexpand(false);
 		add(m_grid);
 		get_style_context()->add_class("eBikeMainWindow");
 		m_grid.get_style_context()->add_class("eBikeWidgetGrid");
@@ -94,6 +93,13 @@ private:
 
 		/* Move actual item to container */
 		m_bikes.push_back(std::forward<WidgetBike>(bike));
+
+		/* Remove last one */
+		if (m_bikes.size() > MAX_BIKES)
+		{
+			m_listBox.remove(*(m_bikes.front().get_parent()));
+			m_bikes.pop_front();
+		}
 
 		/* Use reference to it */
 		m_listBox.prepend(m_bikes.back());
