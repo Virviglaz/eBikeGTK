@@ -27,20 +27,25 @@ public:
 
 	virtual std::string toString() const
 	{
-		char buffer[256];
+		char buffer[128];
 		snprintf(buffer, sizeof(buffer),
 				 "%s\n" \
-				 "ODO: %u km\n" \
-				 "CYC: %u\n" \
+				 "%u km\n" \
 				 "%s",
 				 info.state,
 				 info.mileage_km,
-				 info.battery_cycles,
 				 Clock::get_time_diff(m_created).c_str());
 		return std::string(buffer);
 	}
 
 	uint32_t getBatteryPercent() const { return info.battery_percent; }
+
+	std::string getBatteryPercentStr() const
+	{
+		char buffer[16];
+		snprintf(buffer, sizeof(buffer), "%u%% [%u]", info.battery_percent, info.battery_cycles);
+		return std::string(buffer);
+	}
 
 protected:
 	struct SharedModelData info;

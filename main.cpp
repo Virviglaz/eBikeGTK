@@ -53,7 +53,7 @@ public:
 		set_decorated(false);
 		set_deletable(false);
 		set_size_request(480, 800);
-#if !defined(__x86_64__)
+#ifndef __x86_64__
 		fullscreen();
 #endif
 		m_dispatcher.connect(sigc::mem_fun(*this, &MainWindows::on_notification_received));
@@ -64,7 +64,7 @@ public:
 		} catch (const std::exception &e) {
 			std::cerr << "Failed to start server: " << e.what() << std::endl;
 		}
-#ifdef DEBUG
+#ifdef __x86_64__
 		RegisterBikeWidgetInternal(WidgetBike(eBikeInfoDebug("Test bike 1", 20)));
 		RegisterBikeWidgetInternal(WidgetBike(eBikeInfoDebug("Test bike 2", 50)));
 		RegisterBikeWidgetInternal(WidgetBike(eBikeInfoDebug("Test bike 3", 90)));

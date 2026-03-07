@@ -64,10 +64,8 @@ public:
 		set_hexpand(false);
 #endif
 		m_BikePicAndName = PicAndLabel("Resources/bike_icon.png", m_info.getName(), "eBikeWidgetBikeName");
-		m_BatteryPicAndPercent = PicAndLabel(batteryIconPath(), std::to_string(m_info.getBatteryPercent()) + "%", "eBikeWidgetBattery");
 
-		m_label.set_text(m_info.toString());
-
+		updateInfo();
 		attach(m_BikePicAndName,	0, 0);
 		attach(m_BatteryPicAndPercent,	1, 0);
 		attach(m_label,			2, 0);
@@ -84,7 +82,7 @@ public:
 	void updateInfo()
 	{
 		m_label.set_text(m_info.toString());
-		m_BatteryPicAndPercent = PicAndLabel(batteryIconPath(), std::to_string(m_info.getBatteryPercent()) + "%", "eBikeWidgetBattery");
+		m_BatteryPicAndPercent = PicAndLabel(batteryIconPath(), m_info.getBatteryPercentStr(), "eBikeWidgetBattery");
 	}
 private:
 	const std::string batteryIconPath() const
