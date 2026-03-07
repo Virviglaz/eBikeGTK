@@ -29,16 +29,14 @@ public:
 	{
 		char buffer[256];
 		snprintf(buffer, sizeof(buffer),
-				 "%s %s\n" \
-				 "Mileage: %u km\n" \
-				 "Battery: %u%%\n" \
-				 "Cycles: %u\n%s",
-				 m_name.c_str(),
+				 "%s\n" \
+				 "ODO: %u km\n" \
+				 "CYC: %u\n" \
+				 "%s",
 				 info.state,
 				 info.mileage_km,
-				 info.battery_percent,
 				 info.battery_cycles,
-				 Clock::get_time(m_created).c_str());
+				 Clock::get_time_diff(m_created).c_str());
 		return std::string(buffer);
 	}
 

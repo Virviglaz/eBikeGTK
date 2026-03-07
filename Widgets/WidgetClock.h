@@ -23,6 +23,15 @@ class Clock {
 
 		return std::string(timeString);
 	}
+
+	static std::string get_time_diff(std::time_t startTime, std::time_t endTime = std::time(nullptr))
+	{
+		std::time_t diff = endTime - startTime;
+		char timeString[20];
+		std::strftime(timeString, sizeof(timeString), "%H:%M:%S", std::gmtime(&diff));
+
+		return std::string(timeString);
+	}
 };
 
 class WidgetClock : public Gtk::Label {

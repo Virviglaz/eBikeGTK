@@ -52,11 +52,12 @@ public:
 		set_resizable(false);
 		set_decorated(false);
 		set_deletable(false);
-		//set_default_size(480, 800);
 		set_size_request(480, 800);
+#if !defined(__x86_64__)
 		fullscreen();
-
+#endif
 		m_dispatcher.connect(sigc::mem_fun(*this, &MainWindows::on_notification_received));
+		Glib::signal_timeout().connect(sigc::mem_fun(*this, &MainWindows::UpdateBikeWidgetTimeInfo), 1000);
 
 		try {
 			m_server.Start();
@@ -99,6 +100,13 @@ private:
 #ifndef GTKMM4
 		m_listBox.show_all();
 #endif
+	}
+
+	bool UpdateBikeWidgetTimeInfo()
+	{
+		for (auto& bike : m_bikes)
+			bike.updateInfo();
+		return true;
 	}
 
 	void on_notification_received()
