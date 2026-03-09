@@ -64,8 +64,9 @@ public:
 		set_hexpand(false);
 #endif
 		m_BikePicAndName = PicAndLabel("Resources/bike_icon.png", m_info.getName(), "eBikeWidgetBikeName");
+		m_BatteryPicAndPercent = PicAndLabel(batteryIconPath(), m_info.getBatteryPercentStr(), "eBikeWidgetBattery");
 
-		updateInfo();
+		updateInfoText();
 		attach(m_BikePicAndName,	0, 0);
 		attach(m_BatteryPicAndPercent,	1, 0);
 		attach(m_label,			2, 0);
@@ -79,7 +80,7 @@ public:
 
 	eBikeInfo getInfo() const { return m_info; }
 
-	void updateInfo()
+	void updateInfoText()
 	{
 		m_label.set_text(m_info.toString());
 	}

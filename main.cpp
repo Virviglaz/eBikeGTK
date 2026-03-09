@@ -111,7 +111,7 @@ private:
 	bool UpdateBikeWidgetTimeInfo()
 	{
 		for (auto& bike : m_bikes)
-			bike.updateInfo();
+			bike.updateInfoText();
 		return true;
 	}
 

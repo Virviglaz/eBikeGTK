@@ -36,7 +36,7 @@ class Clock {
 		const long long seconds = diff % 60;
 
 		char timeString[32];
-		std::snprintf(timeString, sizeof(timeString), "%lldd %02lld:%02lld:%02lld", days, hours, minutes, seconds);
+		std::snprintf(timeString, sizeof(timeString), "%lld %02lld:%02lld:%02lld", days, hours, minutes, seconds);
 
 		return std::string(timeString);
 	}
