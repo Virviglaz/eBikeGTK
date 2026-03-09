@@ -82,7 +82,6 @@ public:
 	void updateInfo()
 	{
 		m_label.set_text(m_info.toString());
-		m_BatteryPicAndPercent = PicAndLabel(batteryIconPath(), m_info.getBatteryPercentStr(), "eBikeWidgetBattery");
 	}
 private:
 	const std::string batteryIconPath() const

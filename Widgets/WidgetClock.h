@@ -6,6 +6,7 @@
 #include <chrono>
 #include <ctime>
 #include <locale>
+#include <cstdio>
 #include <gtkmm/cssprovider.h>
 
 class Clock {
@@ -26,9 +27,16 @@ class Clock {
 
 	static std::string get_time_diff(std::time_t startTime, std::time_t endTime = std::time(nullptr))
 	{
-		std::time_t diff = endTime - startTime;
-		char timeString[20];
-		std::strftime(timeString, sizeof(timeString), "%H:%M:%S", std::gmtime(&diff));
+		long long diff = static_cast<long long>(endTime - startTime);
+		const long long days = diff / (24 * 60 * 60);
+		diff %= (24 * 60 * 60);
+		const long long hours = diff / (60 * 60);
+		diff %= (60 * 60);
+		const long long minutes = diff / 60;
+		const long long seconds = diff % 60;
+
+		char timeString[32];
+		std::snprintf(timeString, sizeof(timeString), "%lldd %02lld:%02lld:%02lld", days, hours, minutes, seconds);
 
 		return std::string(timeString);
 	}
