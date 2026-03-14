@@ -43,7 +43,17 @@ public:
 	std::string getBatteryPercentStr() const
 	{
 		char buffer[16];
-		snprintf(buffer, sizeof(buffer), "%u%% [%u]", info.battery_percent, info.battery_cycles);
+		snprintf(buffer, sizeof(buffer), "%u%%", info.battery_percent);
+		return std::string(buffer);
+	}
+
+	std::string getAdditionalInfoStr() const
+	{
+		char buffer[64];
+		snprintf(buffer, sizeof(buffer), "%s\n%.1f\u00B0C %uc",
+				 info.battery,
+				 info.temperature_x10 / 10.0,
+				 info.battery_cycles);
 		return std::string(buffer);
 	}
 
@@ -63,9 +73,11 @@ public:
 		m_name = name;
 		strcpy(info.name, name.c_str());
 		strcpy(info.state, "Debug");
+		strcpy(info.battery, "LiFePO4");
 		info.mileage_km = 1234;
 		info.battery_percent = batteryPercent;
 		info.battery_cycles = 78;
+		info.temperature_x10 = 252;
 		m_created = std::time(nullptr);
 	}
 };

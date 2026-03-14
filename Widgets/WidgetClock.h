@@ -1,13 +1,11 @@
 #ifndef WIDGETCLOCK_H
 #define WIDGETCLOCK_H
 
-#include <gtkmm/label.h>
-#include <glibmm/main.h>
+#include "WidgetBase.h"
 #include <chrono>
 #include <ctime>
 #include <locale>
 #include <cstdio>
-#include <gtkmm/cssprovider.h>
 
 class Clock {
     public:
@@ -42,19 +40,15 @@ class Clock {
 	}
 };
 
-class WidgetClock : public Gtk::Label {
-    public:
-	WidgetClock() : Gtk::Label()
+class WidgetClock : public WidgetLabelBase
+{
+public:
+	WidgetClock() : WidgetLabelBase("eBikeDateTime", false)
 	{
 		Glib::signal_timeout().connect(sigc::mem_fun(*this, &WidgetClock::update_time), 1000);
-#ifdef GTKMM4
-		add_css_class("eBikeDateTimeLabel");
-#else
-		get_style_context()->add_class("eBikeDateTimeLabel");
-#endif
 	}
 
-    private:
+private:
 	bool update_time()
 	{
 		set_text(Clock::get_time());

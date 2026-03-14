@@ -1,11 +1,7 @@
 .eBikeDateTimeLabel {
 	background-color: black;
 	color: green;
-}
-
-.eBikeWidgetGrid {
-	background-color: black;
-	color: black;
+	font-size: 24px;
 }
 
 .eBikeMainWindow {
@@ -19,20 +15,44 @@
 	color: burlywood;
 }
 
-.eBikeWidgetBikeLabel {
+.eBikeWidgetBatteryGrid {
 	background-color: black;
-	color: burlywood;
-	font-size: 20px;
+	color: black;
 }
 
-.eBikeWidgetBikeNameLabel {
+.eBikeWidgetBikeIconIconImage {
+	background-color: black;
+	background-image: url("../Resources/bike_icon.png");
+	min-width: 96px;
+	min-height: 96px;
+}
+
+.eBikeWidgetBikeIconNameLabel {
 	background-color: black;
 	color: burlywood;
 	font-size: 16px;
 }
 
-.eBikeWidgetBatteryLabel {
+.eBikeWidgetBatteryIconImage {
+	background-color: black;
+	min-width: 160px;
+	min-height: 64px;
+}
+
+.eBikeWidgetBatteryPercentLabel {
 	background-color: black;
 	color: burlywood;
-	font-size: 30px;
+	font-size: 26px;
+}
+
+.eBikeWidgetBatteryExtraLabel {
+	background-color: black;
+	color: burlywood;
+	font-size: 12px;
+}
+
+.eBikeWidgetAdditionalInfoLabel {
+	background-color: black;
+	color: burlywood;
+	font-size: 20px;
 }
