@@ -45,9 +45,9 @@ public:
 		attach(m_batteryPercentLabel,	0, 0);
 		attach(m_batteryExtraLabel,		0, 1);
 		attach(m_batteryImage,			0, 2);
-
-		//m_batteryPercentLabel.set_valign(Gtk::Align::END);
-		//m_batteryExtraLabel.set_valign(Gtk::Align::START);
+#ifndef __x86_64__
+		m_batteryImage.set_pixel_size(48);
+#endif
 	}
 
 	void set_battery_icon(const std::string& imagePath)
@@ -126,7 +126,7 @@ private:
 
 		char buffer[64];
 		snprintf(buffer, sizeof(buffer), "Resources/battery_%u.png", imageIndex);
-		return std::string(buffer);
+		return getPath() + std::string(buffer);
 	}
 
 	BikeIconAndNameWidget m_BikeNameAndIcon;
